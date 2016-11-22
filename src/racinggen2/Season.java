@@ -27,6 +27,14 @@ public class Season {
         return null;
     }
 
+    public List<Team> getTeams() {
+        return teams;
+    }
+
+    public List<Team> getPartTimeTeams() {
+        return partTimeTeams;
+    }
+
     public void sortByNumber() {
         Collections.sort(teams, (Team p1, Team p2) -> p1.getNumber() - p2.getNumber());
         Collections.sort(partTimeTeams, (Team p1, Team p2) -> p1.getNumber() - p2.getNumber());

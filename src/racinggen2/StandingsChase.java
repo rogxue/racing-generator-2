@@ -4,6 +4,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+import javax.swing.JOptionPane;
 
 public class StandingsChase {
 
@@ -15,11 +16,14 @@ public class StandingsChase {
         for (Team team : season.teams) {
             standings.add(new SeasonData(team));
         }
+        for (Team team : season.partTimeTeams) {
+            standings.add(new SeasonData(team));
+        }
     }
 
     public void makeStandings(Race race) {
         races++;
-        int points = 43;
+        int points = 40;
         for (int i = 0; i < race.race.size(); i++) {
             for (SeasonData sd : standings) {
                 if (sd.t.equals(race.race.get(i).getTeam())) {
@@ -37,6 +41,9 @@ public class StandingsChase {
                     }
                     if (race.race.get(i).getStart() == 1) {
                         sd.poles++;
+                    }
+                    if (i < 20) {
+                        sd.top20++;
                     }
                     if (i < 10) {
                         sd.top10++;
@@ -60,17 +67,15 @@ public class StandingsChase {
         checkMostLapsLead(race);
 
         if (races == 26) {
-            for (int i = 0; i < standings.size(); i++) {
-                if (standings.get(i).wins > 0) {
-                    standings.add(0, standings.remove(i));
-                }
-            }
+            sortChaseStart();
             for (int i = 0; i < 16; i++) {
                 standings.get(i).setPoints(2000);
                 standings.get(i).addPoints(3 * standings.get(i).wins);
                 standings.get(i).chase = true;
+                standings.get(i).getTeam().setCharter(true);
                 standings.get(i).t.boost();
             }
+            
         }
         if (races == 29) {
             for (int i = 0; i < 16; i++) {
@@ -133,10 +138,10 @@ public class StandingsChase {
     private void checkMostLapsLead(Race race) {
         Team t = null;
         int lapsLead = 0;
-        for (int i = 0; i < race.race.size(); i++) {
-            if (race.race.get(i).getLapsLead() > lapsLead) {
-                lapsLead = race.race.get(i).getLapsLead();
-                t = race.race.get(i).getTeam();
+        for (Race.RaceData rd : race.race) {
+            if (rd.getLapsLead() > lapsLead) {
+                lapsLead = rd.getLapsLead();
+                t = rd.getTeam();
             }
         }
         for (SeasonData sd : standings) {
@@ -153,29 +158,41 @@ public class StandingsChase {
                 -> Double.compare(sd2.points, sd1.points));
     }
 
+    private void sortChaseStart() {
+        Collections.sort(standings, (SeasonData sd1, SeasonData sd2)
+                -> Double.compare(sd2.points, sd1.points));
+        Collections.sort(standings, (SeasonData sd1, SeasonData sd2)
+                -> Integer.compare(sd2.wins, sd1.wins));
+    }
+
     public void printResult() {
         System.out.println("====STANDINGS====");
-        System.out.println("Pos.\tCar #\tPoints\tWins\tT5\tT10\tPoles\tLead\tAvg\tDNF");
+        System.out.println("Pos.\tCar #\tPoints\tWins\tT5\tT10\tT20\tPoles\tLead\tAvg\tStarts\tDNF");
         int i = 1;
         for (SeasonData p : standings) {
-            System.out.println(i + "\t" + p.t.getNumber() + "\t" + p.points + "\t"
-                    + p.wins + "\t" + p.top5 + "\t" + p.top10 + "\t" + p.poles + "\t"
-                    + p.lapsLead + "\t" + df.format(p.cumulative / (double) races)
-                    + "\t" + p.dnf);
-            i++;
+            if (p.starts > 0) {
+                System.out.println(i + "\t" + p.t.getNumber() + "\t" + p.points + "\t"
+                        + p.wins + "\t" + p.top5 + "\t" + p.top10 + "\t" + p.top20 + "\t"
+                        + p.poles + "\t" + p.lapsLead + "\t"
+                        + df.format(p.cumulative / (double) p.starts) + "\t" + p.starts + "\t" + p.dnf);
+                i++;
+            }
         }
     }
 
     @Override
     public String toString() {
         String result = "====STANDINGS====" + "\n";
-        result += "Pos.\tCar #\tPoints\tWins\tT5\tT10\tPoles\tLaps Lead\tAvg\tDNF" + "\n";
+        result += "Pos.\tCar #\tPoints\tWins\tT5\tT10\tPoles\tLaps Lead\tAvg\tStarts\tDNF" + "\n";
         int i = 1;
         for (SeasonData p : standings) {
-            result += i + "\t" + p.t.getNumber() + "\t" + p.points + "\t" + p.wins
-                    + "\t" + p.top5 + "\t" + p.top10 + "\t" + p.poles + "\t" + p.lapsLead
-                    + "\t" + df.format(p.cumulative / (double) races) + "\t" + p.dnf + "\n";
-            i++;
+            if (p.starts > 0) {
+                result += i + "\t" + p.t.getNumber() + "\t" + p.points + "\t" + p.wins
+                        + "\t" + p.top5 + "\t" + p.top10 + "\t" + p.poles + "\t" + p.lapsLead
+                        + "\t" + df.format(p.cumulative / (double) p.starts) + "\t" + p.starts + "\t"
+                        + p.dnf + "\n";
+                i++;
+            }
         }
         return result;
     }
@@ -187,6 +204,7 @@ public class StandingsChase {
         private int wins = 0;
         private int top5 = 0;
         private int top10 = 0;
+        private int top20 = 0;
         private int poles = 0;
         private int lapsLead = 0;
         private int cumulative = 0;
@@ -194,9 +212,14 @@ public class StandingsChase {
         private boolean chase = false;
         private boolean chaseWin = false;
         private int addedPoints = 0;
+        private int starts = 0;
 
         public SeasonData(Team t) {
             this.t = t;
+        }
+
+        public Team getTeam() {
+            return t;
         }
 
         public int getPoints() {
@@ -212,6 +235,7 @@ public class StandingsChase {
         }
 
         public void addPosition(int pos) {
+            starts++;
             this.cumulative += pos;
         }
 

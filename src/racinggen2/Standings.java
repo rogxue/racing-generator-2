@@ -15,11 +15,14 @@ public class Standings {
         for (Team team : season.teams) {
             standings.add(new SeasonData(team));
         }
+        for (Team team : season.partTimeTeams) {
+            standings.add(new SeasonData(team));
+        }
     }
 
     public void makeStandings(Race race) {
         races++;
-        int points = 43;
+        int points = 40;
         for (int i = 0; i < race.race.size(); i++) {
             for (SeasonData sd : standings) {
                 if (sd.t.equals(race.race.get(i).getTeam())) {
@@ -56,10 +59,10 @@ public class Standings {
     private void checkMostLapsLead(Race race) {
         Team t = null;
         int lapsLead = 0;
-        for (int i = 0; i < race.race.size(); i++) {
-            if (race.race.get(i).getLapsLead() > lapsLead) {
-                lapsLead = race.race.get(i).getLapsLead();
-                t = race.race.get(i).getTeam();
+        for (Race.RaceData rd : race.race) {
+            if (rd.getLapsLead() > lapsLead) {
+                lapsLead = rd.getLapsLead();
+                t = rd.getTeam();
             }
         }
         for (SeasonData sd : standings) {
@@ -76,27 +79,32 @@ public class Standings {
 
     public void printResult() {
         System.out.println("====STANDINGS====");
-        System.out.println("Pos.\tCar #\tPoints\tWins\tT5\tT10\tPoles\tLead\tAvg\tDNF");
+        System.out.println("Pos.\tCar #\tPoints\tWins\tT5\tT10\tPoles\tLead\tAvg\tStarts\tDNF");
         int i = 1;
         for (SeasonData p : standings) {
-            System.out.println(i + "\t" + p.t.getNumber() + "\t" + p.points + "\t"
-                    + p.wins + "\t" + p.top5 + "\t" + p.top10 + "\t" + p.poles + "\t"
-                    + p.lapsLead + "\t" + df.format(p.cumulative / (double) races)
-                    + "\t" + p.dnf);
-            i++;
+            if (p.starts > 0) {
+                System.out.println(i + "\t" + p.t.getNumber() + "\t" + p.points + "\t"
+                        + p.wins + "\t" + p.top5 + "\t" + p.top10 + "\t" + p.poles + "\t"
+                        + p.lapsLead + "\t" + df.format(p.cumulative / (double) p.starts)
+                        + "\t" + p.starts + "\t" + p.dnf);
+                i++;
+            }
         }
     }
 
     @Override
     public String toString() {
         String result = "====STANDINGS====" + "\n";
-        result += "Pos.\tCar #\tPoints\tWins\tT5\tT10\tPoles\tLaps Lead\tAvg\tDNF" + "\n";
+        result += "Pos.\tCar #\tPoints\tWins\tT5\tT10\tPoles\tLaps Lead\tAvg\tStarts\tDNF" + "\n";
         int i = 1;
         for (SeasonData p : standings) {
-            result += i + "\t" + p.t.getNumber() + "\t" + p.points + "\t" + p.wins
-                    + "\t" + p.top5 + "\t" + p.top10 + "\t" + p.poles + "\t" + p.lapsLead
-                    + "\t" + df.format(p.cumulative / (double) races) + "\t" + p.dnf + "\n";
-            i++;
+            if (p.starts > 0) {
+                result += i + "\t" + p.t.getNumber() + "\t" + p.points + "\t" + p.wins
+                        + "\t" + p.top5 + "\t" + p.top10 + "\t" + p.poles + "\t" + p.lapsLead
+                        + "\t" + df.format(p.cumulative / (double) p.starts) + "\t" + p.starts + "\t"
+                        + p.dnf + "\n";
+                i++;
+            }
         }
         return result;
     }
@@ -112,6 +120,7 @@ public class Standings {
         private int lapsLead = 0;
         private int cumulative = 0;
         private int dnf = 0;
+        private int starts = 0;
 
         public SeasonData(Team t) {
             this.t = t;
@@ -126,6 +135,7 @@ public class Standings {
         }
 
         public void addPosition(int pos) {
+            starts++;
             this.cumulative += pos;
         }
 

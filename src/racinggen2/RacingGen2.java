@@ -10,6 +10,7 @@ public class RacingGen2 {
             Schedule schedule = new Schedule2016();
             schedule.runSchedule(new ClassOf2016());
         } catch (FileNotFoundException ex) {
+            System.out.println("File not found.");
         }
     }
 }

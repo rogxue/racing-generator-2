@@ -21,6 +21,10 @@ public class Driver {
         this.s = s;
         this.st = st;
         this.rc = rc;
+//        this.ss = 85;
+//        this.s = 85;
+//        this.st = 85;
+//        this.rc = 85;
     }
 
     public String getName() {

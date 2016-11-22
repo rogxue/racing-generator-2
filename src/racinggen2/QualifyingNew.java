@@ -15,6 +15,8 @@ public class QualifyingNew extends Qualifying {
         thirdRound();
         qResults.addAll(0, qResultsRound2);
         qResults.addAll(0, qResultsRound3);
+        removeDnq();
+        Collections.reverse(dnq);
     }
 
     private void secondRound() {
@@ -22,7 +24,7 @@ public class QualifyingNew extends Qualifying {
         for (int i = 0; i < 24; i++) {
             qResultsRound2.add(qResults.remove(0));
             time = 10000;
-            for (int j = 0; j < 2; j++) {
+            for (int j = 0; j < 4; j++) {
                 temp = getLapTime(qResultsRound2.get(i).getTeam()) / 1.0005;
                 if (j == 0) {
                     first = temp;
@@ -41,7 +43,7 @@ public class QualifyingNew extends Qualifying {
         for (int i = 0; i < 12; i++) {
             qResultsRound3.add(qResultsRound2.remove(0));
             time = 10000;
-            for (int j = 0; j < 2; j++) {
+            for (int j = 0; j < 4; j++) {
                 temp = getLapTime(qResultsRound3.get(i).getTeam()) / 1.001;
                 if (j == 0) {
                     first = temp;
@@ -89,6 +91,14 @@ public class QualifyingNew extends Qualifying {
             }
             i++;
         }
+        if (!dnq.isEmpty()) {
+            System.out.println("==DNQ==");
+            for (LapData lp : dnq) {
+                double speed = 1 / (lp.getTime() / 3600 / track.getLength());
+                System.out.println(i + "\t" + lp.getTeam().getNumber() + "\t" + df.format(speed) + "\t" + df.format(lp.getTime()));
+                i++;
+            }
+        }
     }
 
     @Override
@@ -107,6 +117,14 @@ public class QualifyingNew extends Qualifying {
                 result += "====ROUND 2 CUT-OFF====" + "\n";
             }
             i++;
+        }
+        if (!dnq.isEmpty()) {
+            result += "==DNQ==" + "\n";
+            for (LapData lp : dnq) {
+                double speed = 1 / (lp.getTime() / 3600 / track.getLength());
+                result += i + "\t" + lp.getTeam().getNumber() + "\t" + df.format(speed) + "\t" + df.format(lp.getTime()) + "\n";
+                i++;
+            }
         }
         return result;
     }

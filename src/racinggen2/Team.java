@@ -10,14 +10,26 @@ public class Team {
     private int funding;
     private String organization;
     private String manu;
-    private List<String> sponsor = new ArrayList<>();
+    private final List<String> sponsor = new ArrayList<>();
+    private boolean charter = true;
 
     public Team(Driver driver, int number, int funding, String organization, String manu) {
         this.driver = driver;
         this.number = number;
         this.funding = funding;
+//        this.funding = 85;
         this.organization = organization;
         this.manu = manu;
+    }
+
+    public Team(Driver driver, int number, int funding, String organization, String manu, boolean charter) {
+        this.driver = driver;
+        this.number = number;
+        this.funding = funding;
+//        this.funding = 85;
+        this.organization = organization;
+        this.manu = manu;
+        this.charter = charter;
     }
 
     public Driver getDriver() {
@@ -71,9 +83,7 @@ public class Team {
         if (sponsor.isEmpty()) {
             return "Unsponsored";
         }
-        for (String s : sponsor) {
-            result += s + " / ";
-        }
+        result = sponsor.stream().map((s) -> s + " / ").reduce(result, String::concat);
         return result.substring(0, result.length() - 3);
     }
 
@@ -83,6 +93,14 @@ public class Team {
 
     public void setManu(String manu) {
         this.manu = manu;
+    }
+
+    public boolean isCharter() {
+        return charter;
+    }
+
+    public void setCharter(boolean charter) {
+        this.charter = charter;
     }
 
     public void boost() {

@@ -20,6 +20,7 @@ public class ClassOf2016 extends Season {
         germainRacing();
         goFasRacing();
         hendrickMotorsports();
+        hillmanRacing();
         hScottMotorsports();
         joeGibbsRacing();
         jtgRacing();
@@ -29,21 +30,26 @@ public class ClassOf2016 extends Season {
         richardPettyMotorports();
         roushRacing();
         stewartHaasRacing();
-//        testTeam();
-        theMotorsportsGroup();
+        //  testTeam();
         tommyBaldwinRacing();
         woodBrothers();
 
+        theMotorsportsGroup();
     }
 
     private void bkRacing() {
         String s = "BK Racing";
         Driver dr = new Driver("David", "Ragan", 90, 80, 80, 80);
         Driver md = new Driver("Matt", "DiBenedetto", 75, 75, 75, 75);
+        Driver mw = new Driver("Michael", "Waltrip", 90, 85, 85, 80);
+        Driver rr = new Driver("Robert", "Richardson Jr.", 75, 75, 75, 75);
         teams.add(new Team(dr, 23, 75, s, "Toyota"));
+        partTimeTeams.add(new Team(rr, 26, 75, s, "Toyota", false));
         teams.add(new Team(md, 83, 75, s, "Toyota"));
+        partTimeTeams.add(new Team(mw, 93, 80, s, "Toyota", false));
         getTeam(23).addSponsor("Dr. Pepper");
         getTeam(83).addSponsor("Dustless Blasting");
+        getTeam(93).addSponsor("Maxwell House");
     }
 
     private void chipGanassiRacing() {
@@ -67,7 +73,9 @@ public class ClassOf2016 extends Season {
         String s = "Front Row Motorsports";
         Driver cb = new Driver("Chris", "Buescher", 75, 75, 75, 75);
         Driver lc = new Driver("Landon", "Cassill", 85, 80, 80, 75);
+        Driver dg = new Driver("David", "Gillland", 80, 80, 80, 80);
         teams.add(new Team(cb, 34, 85, s, "Ford"));
+        partTimeTeams.add(new Team(dg, 35, 80, s, "Ford", false));
         teams.add(new Team(lc, 38, 85, s, "Ford"));
         getTeam(34).addSponsor("Love's Travel Stops");
         getTeam(38).addSponsor("Snap Fitness");
@@ -108,6 +116,13 @@ public class ClassOf2016 extends Season {
         getTeam(24).addSponsor("NAPA Auto Parts");
         getTeam(48).addSponsor("Lowe's");
         getTeam(88).addSponsor("Nationwide", "Mountain Dew");
+    }
+
+    private void hillmanRacing() {
+        String s = "Hillman Racing";
+        Driver rs = new Driver("Reed", "Sorenson", 80, 80, 80, 80);
+        partTimeTeams.add(new Team(rs, 40, 80, s, "Chevrolet", false));
+        getTeam(40).addSponsor("CRC BRAKLEEN");
     }
 
     private void hScottMotorsports() {
@@ -156,9 +171,7 @@ public class ClassOf2016 extends Season {
     private void premiumMotorsports() {
         String s = "Premium Motorsports";
         Driver cw = new Driver("Cole", "Whitt", 75, 75, 75, 75);
-        Driver rs = new Driver("Reed", "Sorenson", 75, 75, 75, 75);
         teams.add(new Team(cw, 98, 70, s, "Toyota"));
-        teams.add(new Team(rs, 55, 70, s, "Toyota"));
     }
 
     private void richardChildressRacing() {
@@ -219,17 +232,11 @@ public class ClassOf2016 extends Season {
         Driver cb = new Driver("Christian", "Bruns", 100, 100, 100, 100);
         Driver rx = new Driver("Roger", "Xue", 100, 100, 100, 100);
         Driver jr = new Driver("Justin", "Rose", 100, 100, 100, 100);
-        Driver jm = new Driver("John", "Matthews", 100, 100, 100, 0);
+        Driver jm = new Driver("John", "Matthews", 100, 100, 100, 100);
         teams.add(new Team(cb, 199, 100, s, "Chevrolet"));
         teams.add(new Team(rx, 139, 100, s, "Chevrolet"));
         teams.add(new Team(jr, 169, 100, s, "Chevrolet"));
         teams.add(new Team(jm, 109, 100, s, "Chevrolet"));
-    }
-
-    private void theMotorsportsGroup() {
-        String s = "The Motorsports Group";
-        Driver jw = new Driver("Josh", "Wise", 75, 75, 75, 75);
-        teams.add(new Team(jw, 30, 70, s, "Chevrolet"));
     }
 
     private void tommyBaldwinRacing() {
@@ -242,7 +249,14 @@ public class ClassOf2016 extends Season {
     private void woodBrothers() {
         String s = "Wood Brothers Racing";
         Driver rb = new Driver("Ryan", "Blaney", 85, 80, 80, 80);
-        teams.add(new Team(rb, 21, 95, s, "Ford"));
+        teams.add(new Team(rb, 21, 95, s, "Ford", false));
         getTeam(21).addSponsor("Motorcraft", "Quick Lane");
     }
+//================================================================================
+    private void theMotorsportsGroup() {
+        String s = "The Motorsports Group";
+        Driver jw = new Driver("Josh", "Wise", 80, 75, 75, 75);
+        partTimeTeams.add(new Team(jw, 30, 75, s, "Chevrolet", false));
+    }
+
 }
