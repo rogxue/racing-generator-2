@@ -20,7 +20,6 @@ public class ClassOf2016 extends Season {
         germainRacing();
         goFasRacing();
         hendrickMotorsports();
-        hillmanRacing();
         hScottMotorsports();
         joeGibbsRacing();
         jtgRacing();
@@ -118,13 +117,6 @@ public class ClassOf2016 extends Season {
         getTeam(88).addSponsor("Nationwide", "Mountain Dew");
     }
 
-    private void hillmanRacing() {
-        String s = "Hillman Racing";
-        Driver rs = new Driver("Reed", "Sorenson", 80, 80, 80, 80);
-        partTimeTeams.add(new Team(rs, 40, 80, s, "Chevrolet", false));
-        getTeam(40).addSponsor("CRC BRAKLEEN");
-    }
-
     private void hScottMotorsports() {
         String s = "HScott Motorsports";
         Driver cb = new Driver("Clint", "Bowyer", 85, 85, 85, 80);
@@ -171,6 +163,8 @@ public class ClassOf2016 extends Season {
     private void premiumMotorsports() {
         String s = "Premium Motorsports";
         Driver cw = new Driver("Cole", "Whitt", 75, 75, 75, 75);
+        Driver rs = new Driver("Reed", "Sorenson", 75, 75, 75, 75);
+        teams.add(new Team(rs, 55, 70, s, "Toyota"));
         teams.add(new Team(cw, 98, 70, s, "Toyota"));
     }
 
